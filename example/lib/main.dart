@@ -51,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     onValueChanged: (value) {
                       setState(() => this.value = value);
                     },
+                    arrowThickness: 1,
+                    arrowVerticalPadding: 4,
+                    arrowHorizontalPadding: 4,
                   ),
                 ),
               ),
@@ -69,6 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     onValueChanged: (value) {
                       setState(() => this.value = value);
                     },
+                    arrowThickness: 1,
+                    arrowVerticalPadding: 4,
+                    arrowHorizontalPadding: 4,
                   ),
                 ),
               ),

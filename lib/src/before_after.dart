@@ -63,6 +63,9 @@ class BeforeAfter extends StatefulWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    required this.arrowThickness,
+    required this.arrowVerticalPadding,
+    required this.arrowHorizontalPadding,
   })  : assert(thumbDecoration == null || thumbDecoration.debugAssertIsValid()),
         assert(
           thumbColor == null || thumbDecoration == null,
@@ -70,6 +73,11 @@ class BeforeAfter extends StatefulWidget {
           'To provide both, use "thumbDecoration: BoxDecoration(color: thumbColor)".',
         ),
         super(key: key);
+
+  final double arrowVerticalPadding;
+  final double arrowHorizontalPadding;
+
+  final double arrowThickness;
 
   /// The widget to be displayed before the slider.
   final Widget before;
@@ -285,6 +293,9 @@ class _BeforeAfterState extends State<BeforeAfter>
       vsync: this,
     );
     _painter = SliderPainter(
+      arrowVerticalPadding: widget.arrowVerticalPadding,
+      arrowHorizontalPadding: widget.arrowHorizontalPadding,
+      arrowThickness: widget.arrowThickness,
       overlayAnimation: CurvedAnimation(
         parent: _overlayController,
         curve: Curves.fastOutSlowIn,

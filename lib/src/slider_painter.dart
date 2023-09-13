@@ -44,10 +44,28 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
   SliderPainter({
     required Animation<double> overlayAnimation,
     ValueSetter<Rect>? onThumbRectChanged,
-  })  : _overlayAnimation = overlayAnimation,
+    required double arrowThickness,
+    required double arrowVerticalPadding,
+    required double arrowHorizontalPadding,
+  })  : _arrowThickness = arrowThickness,
+        _arrowVerticalPadding = arrowVerticalPadding,
+        _arrowHorizontalPadding = arrowHorizontalPadding,
+        _overlayAnimation = overlayAnimation,
         _onThumbRectChanged = onThumbRectChanged {
     _overlayAnimation.addListener(notifyListeners);
   }
+
+  final double _arrowThickness;
+
+  double get arrowThickness => _arrowThickness;
+
+  final double _arrowVerticalPadding;
+
+  double get arrowVerticalPadding => _arrowVerticalPadding;
+
+  final double _arrowHorizontalPadding;
+
+  double get arrowHorizontalPadding => _arrowHorizontalPadding;
 
   /// The animation of the thumb overlay.
   final Animation<double> _overlayAnimation;
@@ -210,44 +228,28 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
     // Draw track (first and second half).
     canvas
       ..drawLine(
-        Offset(
-          isHorizontal ? size.width * value : 0.0,
-          isHorizontal ? 0.0 : size.height * value,
-        ),
-        Offset(
-          isHorizontal
-              ? size.width * value
-              : size.width * thumbValue - (thumbHeight / 2),
-          isHorizontal
-              ? size.height * thumbValue - (thumbHeight / 2)
-              : size.height * value,
-        ),
-        trackPaint,
-      )
+          Offset(
+            size.width * value,
+            0.0,
+          ),
+          Offset(size.width * value,
+              size.height - thumbHeight - (size.height * 0.08)),
+          trackPaint)
       ..drawLine(
+        Offset(size.width * value, size.height - (size.height * 0.08)),
         Offset(
-          isHorizontal
-              ? size.width * value
-              : size.width * thumbValue + thumbHeight / 2,
-          isHorizontal
-              ? size.height * thumbValue + thumbHeight / 2
-              : size.height * value,
-        ),
-        Offset(
-          isHorizontal ? size.width * value : size.width,
-          isHorizontal ? size.height : size.height * value,
+          size.width * value,
+          size.height,
         ),
         trackPaint,
       );
 
     // Calculate the thumb rect.
     final thumbRect = Rect.fromCenter(
-      center: Offset(
-        isHorizontal ? size.width * value : size.width * thumbValue,
-        isHorizontal ? size.height * thumbValue : size.height * value,
-      ),
-      width: isHorizontal ? thumbWidth : thumbHeight,
-      height: isHorizontal ? thumbHeight : thumbWidth,
+      center: Offset(size.width * value,
+          size.height - thumbHeight / 2 - (size.height * 0.08)),
+      width: thumbWidth,
+      height: thumbHeight,
     );
 
     // Notify the listener of the thumb rect.
@@ -320,9 +322,66 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
       }
       final config = configuration.copyWith(size: thumbRect.size);
       _thumbPainter!.paint(canvas, thumbRect.topLeft, config);
+      drawArrows(canvas, thumbRect);
     } finally {
       _isPainting = false;
     }
+  }
+
+  void drawArrows(Canvas canvas, Rect thumbRect) {
+    double arrowSizeFixFactor = 1.4;
+    // double arrowWidth = 20;
+    // double arrowHeight = 20;
+
+    // double arrowWidth = thumbRect.width / 2 - trackWidth - _arrowVerticalPadding;
+    // double arrowHeight = thumbRect.height - 2 * _arrowVerticalPadding * arrowSizeFixFactor;
+
+    double arrowWidth = (thumbWidth - trackWidth) / 2 - arrowHorizontalPadding;
+    double arrowHeight = thumbHeight - 2 * arrowVerticalPadding;
+
+    var arrowPainter = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _arrowThickness
+      ..strokeCap = StrokeCap.round;
+
+    var arrowPath = Path();
+    final leftArrowRightOffset =
+        Offset(thumbRect.center.dx - trackWidth - 2, thumbRect.center.dy);
+    final leftArrowLeftOffset = Offset(
+        thumbRect.center.dx - trackWidth - arrowWidth, thumbRect.center.dy);
+    final leftArrowTopOffset = Offset(
+        leftArrowLeftOffset.dx + (arrowWidth / 2.5),
+        leftArrowLeftOffset.dy - (arrowHeight / 2.5));
+    final leftArrowBottomOffset = Offset(
+        leftArrowLeftOffset.dx + (arrowWidth / 2.5),
+        leftArrowLeftOffset.dy + (arrowHeight / 2.5));
+
+    final rightArrowRightOffset =
+        Offset(thumbRect.center.dx + trackWidth + 2, thumbRect.center.dy);
+    final rightArrowLeftOffset = Offset(
+        thumbRect.center.dx + trackWidth + arrowWidth, thumbRect.center.dy);
+    final rightArrowTopOffset = Offset(
+        rightArrowLeftOffset.dx - (arrowWidth / 2.5),
+        rightArrowLeftOffset.dy - (arrowHeight / 2.5));
+    final rightArrowBottomOffset = Offset(
+        rightArrowLeftOffset.dx - (arrowWidth / 2.5),
+        rightArrowLeftOffset.dy + (arrowHeight / 2.5));
+
+    // arrowPath.moveTo(leftArrowRightOffset.dx, leftArrowRightOffset.dy);
+    // arrowPath.lineTo(leftArrowLeftOffset.dx, leftArrowLeftOffset.dy);
+    // arrowPath.moveTo(leftArrowLeftOffset.dx, leftArrowLeftOffset.dy);
+    // arrowPath.lineTo(leftArrowTopOffset.dx, leftArrowTopOffset.dy);
+    // arrowPath.moveTo(leftArrowBottomOffset.dx, leftArrowBottomOffset.dy);
+    // arrowPath.lineTo(leftArrowLeftOffset.dx, leftArrowLeftOffset.dy);
+    // canvas.drawPath(arrowPath, paint1);
+
+    canvas.drawLine(rightArrowRightOffset, rightArrowLeftOffset, arrowPainter);
+    canvas.drawLine(rightArrowLeftOffset, rightArrowTopOffset, arrowPainter);
+    canvas.drawLine(rightArrowLeftOffset, rightArrowBottomOffset, arrowPainter);
+    canvas.drawLine(leftArrowLeftOffset, leftArrowRightOffset, arrowPainter);
+    canvas.drawLine(leftArrowLeftOffset, leftArrowTopOffset, arrowPainter);
+    canvas.drawLine(leftArrowLeftOffset, leftArrowBottomOffset, arrowPainter);
   }
 
   @override
