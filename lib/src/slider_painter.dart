@@ -329,13 +329,6 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
   }
 
   void drawArrows(Canvas canvas, Rect thumbRect) {
-    double arrowSizeFixFactor = 1.4;
-    // double arrowWidth = 20;
-    // double arrowHeight = 20;
-
-    // double arrowWidth = thumbRect.width / 2 - trackWidth - _arrowVerticalPadding;
-    // double arrowHeight = thumbRect.height - 2 * _arrowVerticalPadding * arrowSizeFixFactor;
-
     double arrowWidth = (thumbWidth - trackWidth) / 2 - arrowHorizontalPadding;
     double arrowHeight = thumbHeight - 2 * arrowVerticalPadding;
 
@@ -345,7 +338,6 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
       ..strokeWidth = _arrowThickness
       ..strokeCap = StrokeCap.round;
 
-    var arrowPath = Path();
     final leftArrowRightOffset =
         Offset(thumbRect.center.dx - trackWidth - 2, thumbRect.center.dy);
     final leftArrowLeftOffset = Offset(
@@ -367,7 +359,7 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
     final rightArrowBottomOffset = Offset(
         rightArrowLeftOffset.dx - (arrowWidth / 2.5),
         rightArrowLeftOffset.dy + (arrowHeight / 2.5));
-
+    // var arrowPath = Path();
     // arrowPath.moveTo(leftArrowRightOffset.dx, leftArrowRightOffset.dy);
     // arrowPath.lineTo(leftArrowLeftOffset.dx, leftArrowLeftOffset.dy);
     // arrowPath.moveTo(leftArrowLeftOffset.dx, leftArrowLeftOffset.dy);
