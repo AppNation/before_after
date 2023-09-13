@@ -55,16 +55,16 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
     _overlayAnimation.addListener(notifyListeners);
   }
 
-  final double _arrowThickness;
+  Size _imgSize = Size(0,0);
+  Size get imgSize => _imgSize;
 
+  final double _arrowThickness;
   double get arrowThickness => _arrowThickness;
 
   final double _arrowVerticalPadding;
-
   double get arrowVerticalPadding => _arrowVerticalPadding;
 
   final double _arrowHorizontalPadding;
-
   double get arrowHorizontalPadding => _arrowHorizontalPadding;
 
   /// The animation of the thumb overlay.
@@ -201,6 +201,8 @@ class SliderPainter extends ChangeNotifier implements CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    _imgSize = size;
+
     // Clip the canvas to the size of the slider so that we don't draw outside.
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 

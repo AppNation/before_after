@@ -327,6 +327,11 @@ class _BeforeAfterState extends State<BeforeAfter>
   }
 
   void _handleValueChanged(double value) {
+    double imgWidth = _painter.imgSize.width;
+    if (value * imgWidth >= imgWidth - (_painter.thumbWidth / 2) ||
+        value * imgWidth <= _painter.thumbWidth / 2) {
+      return;
+    }
     assert(widget.onValueChanged != null);
     if (value != widget.value) {
       widget.onValueChanged!(value);
