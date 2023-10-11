@@ -530,13 +530,15 @@ class _BeforeAfterState extends State<BeforeAfter>
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                before,
-                ClipRect(
-                  clipper: RectClipper(
-                    direction: widget.direction,
-                    clipFactor: widget.value,
+                Positioned.fill(child: before),
+                Positioned.fill(
+                  child: ClipRect(
+                    clipper: RectClipper(
+                      direction: widget.direction,
+                      clipFactor: widget.value,
+                    ),
+                    child: after,
                   ),
-                  child: after,
                 ),
                 CustomPaint(
                   painter: _painter
