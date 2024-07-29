@@ -63,6 +63,7 @@ class BeforeAfter extends StatefulWidget {
     this.mouseCursor,
     this.focusNode,
     this.autofocus = false,
+    this.includeThumbWidthInBoundsCheck = false,
     required this.arrowThickness,
     required this.arrowVerticalPadding,
     required this.arrowHorizontalPadding,
@@ -174,6 +175,9 @@ class BeforeAfter extends StatefulWidget {
   ///  * [MaterialStateMouseCursor], which can be used to create a [MouseCursor]
   ///    that is also a [MaterialStateProperty<MouseCursor>].
   final MouseCursor? mouseCursor;
+
+  /// Whether to include the thumb width in the bounds check.
+  final bool includeThumbWidthInBoundsCheck;
 
   @override
   State<BeforeAfter> createState() => _BeforeAfterState();
@@ -328,8 +332,13 @@ class _BeforeAfterState extends State<BeforeAfter>
 
   void _handleValueChanged(double value) {
     double imgWidth = _painter.imgSize.width;
-    if (value * imgWidth >= imgWidth - (_painter.thumbWidth / 2) ||
-        value * imgWidth <= _painter.thumbWidth / 2) {
+
+    double adjustedThumbWidth =
+        widget.includeThumbWidthInBoundsCheck ? (widget.thumbWidth ?? 0) : 0;
+
+    if (value * imgWidth >=
+            imgWidth - (_painter.thumbWidth / 2) + adjustedThumbWidth ||
+        value * imgWidth <= _painter.thumbWidth / 2 - adjustedThumbWidth) {
       return;
     }
     assert(widget.onValueChanged != null);
