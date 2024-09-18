@@ -67,7 +67,7 @@ class BeforeAfter extends StatefulWidget {
     required this.arrowThickness,
     required this.arrowVerticalPadding,
     required this.arrowHorizontalPadding,
-    this.useIgnorePointer = false,
+    this.disableTouchInteraction = false,
   })  : assert(thumbDecoration == null || thumbDecoration.debugAssertIsValid()),
         assert(
           thumbColor == null || thumbDecoration == null,
@@ -180,7 +180,8 @@ class BeforeAfter extends StatefulWidget {
   /// Whether to include the thumb width in the bounds check.
   final bool includeThumbWidthInBoundsCheck;
 
-  final bool useIgnorePointer;
+  /// Whether to use an [IgnorePointer] widget to wrap the slider.
+  final bool disableTouchInteraction;
 
   @override
   State<BeforeAfter> createState() => _BeforeAfterState();
@@ -552,7 +553,7 @@ class _BeforeAfterState extends State<BeforeAfter>
                     child: after,
                   ),
                 ),
-                widget.useIgnorePointer
+                widget.disableTouchInteraction
                     ? IgnorePointer(
                         child: CustomPaint(
                           painter: _painter
