@@ -67,6 +67,7 @@ class BeforeAfter extends StatefulWidget {
     required this.arrowThickness,
     required this.arrowVerticalPadding,
     required this.arrowHorizontalPadding,
+    this.useIgnorePointer = false,
   })  : assert(thumbDecoration == null || thumbDecoration.debugAssertIsValid()),
         assert(
           thumbColor == null || thumbDecoration == null,
@@ -178,6 +179,8 @@ class BeforeAfter extends StatefulWidget {
 
   /// Whether to include the thumb width in the bounds check.
   final bool includeThumbWidthInBoundsCheck;
+
+  final bool useIgnorePointer;
 
   @override
   State<BeforeAfter> createState() => _BeforeAfterState();
@@ -549,21 +552,41 @@ class _BeforeAfterState extends State<BeforeAfter>
                     child: after,
                   ),
                 ),
-                CustomPaint(
-                  painter: _painter
-                    ..axis = widget.direction
-                    ..value = widget.value
-                    ..trackWidth = effectiveTrackWidth
-                    ..trackColor = effectiveTrackColor
-                    ..hideThumb = widget.hideThumb
-                    ..thumbValue = widget.thumbPosition
-                    ..thumbHeight = effectiveThumbHeight
-                    ..thumbWidth = effectiveThumbWidth
-                    ..overlayColor = effectiveOverlayColor
-                    ..configuration = createLocalImageConfiguration(context)
-                    ..thumbDecoration = effectiveThumbDecoration,
-                  child: Hide(child: after),
-                ),
+                widget.useIgnorePointer
+                    ? IgnorePointer(
+                        child: CustomPaint(
+                          painter: _painter
+                            ..axis = widget.direction
+                            ..value = widget.value
+                            ..trackWidth = effectiveTrackWidth
+                            ..trackColor = effectiveTrackColor
+                            ..hideThumb = widget.hideThumb
+                            ..thumbValue = widget.thumbPosition
+                            ..thumbHeight = effectiveThumbHeight
+                            ..thumbWidth = effectiveThumbWidth
+                            ..overlayColor = effectiveOverlayColor
+                            ..configuration =
+                                createLocalImageConfiguration(context)
+                            ..thumbDecoration = effectiveThumbDecoration,
+                          child: Hide(child: after),
+                        ),
+                      )
+                    : CustomPaint(
+                        painter: _painter
+                          ..axis = widget.direction
+                          ..value = widget.value
+                          ..trackWidth = effectiveTrackWidth
+                          ..trackColor = effectiveTrackColor
+                          ..hideThumb = widget.hideThumb
+                          ..thumbValue = widget.thumbPosition
+                          ..thumbHeight = effectiveThumbHeight
+                          ..thumbWidth = effectiveThumbWidth
+                          ..overlayColor = effectiveOverlayColor
+                          ..configuration =
+                              createLocalImageConfiguration(context)
+                          ..thumbDecoration = effectiveThumbDecoration,
+                        child: Hide(child: after),
+                      ),
               ],
             ),
           ),
