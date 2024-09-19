@@ -67,6 +67,7 @@ class BeforeAfter extends StatefulWidget {
     required this.arrowThickness,
     required this.arrowVerticalPadding,
     required this.arrowHorizontalPadding,
+    this.disableTouchInteraction = false,
   })  : assert(thumbDecoration == null || thumbDecoration.debugAssertIsValid()),
         assert(
           thumbColor == null || thumbDecoration == null,
@@ -178,6 +179,9 @@ class BeforeAfter extends StatefulWidget {
 
   /// Whether to include the thumb width in the bounds check.
   final bool includeThumbWidthInBoundsCheck;
+
+  /// Whether to use an [IgnorePointer] widget to wrap the slider.
+  final bool disableTouchInteraction;
 
   @override
   State<BeforeAfter> createState() => _BeforeAfterState();
@@ -549,20 +553,23 @@ class _BeforeAfterState extends State<BeforeAfter>
                     child: before,
                   ),
                 ),
-                CustomPaint(
-                  painter: _painter
-                    ..axis = widget.direction
-                    ..value = widget.value
-                    ..trackWidth = effectiveTrackWidth
-                    ..trackColor = effectiveTrackColor
-                    ..hideThumb = widget.hideThumb
-                    ..thumbValue = widget.thumbPosition
-                    ..thumbHeight = effectiveThumbHeight
-                    ..thumbWidth = effectiveThumbWidth
-                    ..overlayColor = effectiveOverlayColor
-                    ..configuration = createLocalImageConfiguration(context)
-                    ..thumbDecoration = effectiveThumbDecoration,
-                  child: Hide(child: after),
+                IgnorePointer(
+                  ignoring: widget.disableTouchInteraction,
+                  child: CustomPaint(
+                    painter: _painter
+                      ..axis = widget.direction
+                      ..value = widget.value
+                      ..trackWidth = effectiveTrackWidth
+                      ..trackColor = effectiveTrackColor
+                      ..hideThumb = widget.hideThumb
+                      ..thumbValue = widget.thumbPosition
+                      ..thumbHeight = effectiveThumbHeight
+                      ..thumbWidth = effectiveThumbWidth
+                      ..overlayColor = effectiveOverlayColor
+                      ..configuration = createLocalImageConfiguration(context)
+                      ..thumbDecoration = effectiveThumbDecoration,
+                    child: Hide(child: after),
+                  ),
                 ),
               ],
             ),
