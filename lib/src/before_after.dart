@@ -553,41 +553,24 @@ class _BeforeAfterState extends State<BeforeAfter>
                     child: after,
                   ),
                 ),
-                widget.disableTouchInteraction
-                    ? IgnorePointer(
-                        child: CustomPaint(
-                          painter: _painter
-                            ..axis = widget.direction
-                            ..value = widget.value
-                            ..trackWidth = effectiveTrackWidth
-                            ..trackColor = effectiveTrackColor
-                            ..hideThumb = widget.hideThumb
-                            ..thumbValue = widget.thumbPosition
-                            ..thumbHeight = effectiveThumbHeight
-                            ..thumbWidth = effectiveThumbWidth
-                            ..overlayColor = effectiveOverlayColor
-                            ..configuration =
-                                createLocalImageConfiguration(context)
-                            ..thumbDecoration = effectiveThumbDecoration,
-                          child: Hide(child: after),
-                        ),
-                      )
-                    : CustomPaint(
-                        painter: _painter
-                          ..axis = widget.direction
-                          ..value = widget.value
-                          ..trackWidth = effectiveTrackWidth
-                          ..trackColor = effectiveTrackColor
-                          ..hideThumb = widget.hideThumb
-                          ..thumbValue = widget.thumbPosition
-                          ..thumbHeight = effectiveThumbHeight
-                          ..thumbWidth = effectiveThumbWidth
-                          ..overlayColor = effectiveOverlayColor
-                          ..configuration =
-                              createLocalImageConfiguration(context)
-                          ..thumbDecoration = effectiveThumbDecoration,
-                        child: Hide(child: after),
-                      ),
+                IgnorePointer(
+                  ignoring: widget.disableTouchInteraction,
+                  child: CustomPaint(
+                    painter: _painter
+                      ..axis = widget.direction
+                      ..value = widget.value
+                      ..trackWidth = effectiveTrackWidth
+                      ..trackColor = effectiveTrackColor
+                      ..hideThumb = widget.hideThumb
+                      ..thumbValue = widget.thumbPosition
+                      ..thumbHeight = effectiveThumbHeight
+                      ..thumbWidth = effectiveThumbWidth
+                      ..overlayColor = effectiveOverlayColor
+                      ..configuration = createLocalImageConfiguration(context)
+                      ..thumbDecoration = effectiveThumbDecoration,
+                    child: Hide(child: after),
+                  ),
+                ),
               ],
             ),
           ),
